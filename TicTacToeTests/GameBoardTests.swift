@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-=======
-//
-//  GameBoardTests.swift
-//  TicTacToeTests
-//
->>>>>>> fc7ee1270c06e191830a2eb6202f0c7c42939c6b
 //  Created by Andrew R Madsen on 9/11/18.
 //  Copyright © 2018 Lambda School. All rights reserved.
 //
