@@ -13,7 +13,11 @@
 	<key>CFBundleName</key>
 	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundlePackageType</key>
+<<<<<<< HEAD
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
+=======
+	<string>BNDL</string>
+>>>>>>> fc7ee1270c06e191830a2eb6202f0c7c42939c6b
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
