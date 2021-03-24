@@ -30,7 +30,6 @@ struct Game {
     
     mutating internal func makeMark(at coordinate: Coordinate, completion: @escaping (Result<Bool, PlayError>) -> Void) {
         guard case let GameState.active(player) = gameState else {
-            NSLog("Game is over")
             completion(.failure(.gameOver))
             return
         }

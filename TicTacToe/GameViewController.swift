@@ -21,7 +21,7 @@ class GameViewController: UIViewController, BoardViewControllerDelegate {
     
     @IBOutlet weak var statusLabel: UILabel!
     
-
+    
     
     @IBAction func restartGame(_ sender: Any) {
         game.restart()
@@ -30,14 +30,14 @@ class GameViewController: UIViewController, BoardViewControllerDelegate {
     // MARK: - BoardViewControllerDelegate
     
     private var boardViewController: BoardViewController! {
-         willSet {
-             boardViewController?.delegate = nil
-         }
-         didSet {
-             boardViewController?.board = game.board
-             boardViewController?.delegate = self
-         }
-     }
+        willSet {
+            boardViewController?.delegate = nil
+        }
+        didSet {
+            boardViewController?.board = game.board
+            boardViewController?.delegate = self
+        }
+    }
     
     func boardViewController(_ boardViewController: BoardViewController, markWasMadeAt coordinate: Coordinate) {
         game.makeMark(at: coordinate, completion: { (result) in
@@ -47,25 +47,24 @@ class GameViewController: UIViewController, BoardViewControllerDelegate {
                     switch error {
                     case .illegalMove:
                         DispatchQueue.main.async {
-                        let alert = UIAlertController(title: "Illegal Move",
-                                                      message: "Square already in use",
-                                                      preferredStyle: .alert)
-                        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                        self.present(alert, animated: true, completion: nil)
-                        
-                       }
+                            let alert = UIAlertController(title: "Illegal Move",
+                                                          message: "Square already in use",
+                                                          preferredStyle: .alert)
+                            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                            self.present(alert, animated: true, completion: nil)
+                            
+                        }
                     case .gameOver:
-                        print("game over!!!")
                         DispatchQueue.main.async {
-                        let alert = UIAlertController(title: "Game Over",
-                                                      message: "Please start a new game",
-                                                      preferredStyle: .alert)
+                            let alert = UIAlertController(title: "Game Over",
+                                                          message: "Please start a new game",
+                                                          preferredStyle: .alert)
                             alert.addAction(UIAlertAction(title: "Restart", style: .default, handler: {alert in
                                 self.game.restart()
                             }))
                             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-                        self.present(alert, animated: true, completion: nil)
-                       }
+                            self.present(alert, animated: true, completion: nil)
+                        }
                     }
                 }
             }
@@ -80,7 +79,7 @@ class GameViewController: UIViewController, BoardViewControllerDelegate {
     
     private func updateViews() {
         guard isViewLoaded else { return }
-  
+        
         switch game.gameState {
         case let .active(player):
             statusLabel.text = "Player \(player.stringValue)'s turn"
@@ -96,8 +95,8 @@ class GameViewController: UIViewController, BoardViewControllerDelegate {
     // MARK: - Navigation
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-         if segue.identifier == "EmbedBoard" {
-             boardViewController = segue.destination as? BoardViewController
-         }
-     }
+        if segue.identifier == "EmbedBoard" {
+            boardViewController = segue.destination as? BoardViewController
+        }
+    }
 }
