@@ -10,6 +10,7 @@ import XCTest
 @testable import TicTacToe
 
 class GameTests: XCTestCase {
+    
 
     func testRestart() {
         // board should be a new, empty board
@@ -28,7 +29,9 @@ class GameTests: XCTestCase {
         let coordinate1 = (0, 0)
         XCTAssertNil(game.board[coordinate1])
         // run the function
-        try! game.makeMark(at: coordinate1)
+        game.makeMark(at: coordinate1, completion: { (result) in
+            try! result.get()
+        })
         // check that it's no longer nil
         XCTAssertNotNil(game.board[coordinate1])
         XCTAssertEqual(game.board[coordinate1], .x)
@@ -37,73 +40,108 @@ class GameTests: XCTestCase {
         // make sure o goes next
         let coordinate2 = (0, 1)
         XCTAssertNil(game.board[coordinate2])
-        try! game.makeMark(at: coordinate2)
+        game.makeMark(at: coordinate2, completion: { (result) in
+            try! result.get()
+        })
         XCTAssertEqual(game.board[coordinate2], .o)
         
     }
-    
+
     func testActivePlayer() {
         var game = Game(board: GameBoard(), gameIsOver: false)
         // x starts each game
         XCTAssertEqual(game.activePlayer, .x)
-        
+
         // Game starts
         game.gameState = .active(.x)
-            
+
         // State is unchanged by making game active
         XCTAssertEqual(game.activePlayer, .x)
     }
-    
+
     func testXWin() {
         var game = Game(board: GameBoard(), gameIsOver: false)
-        
+
         /*
         x o -
         x o -
         x - -
         */
         // makeMark will have to switch between active players
-        try! game.makeMark(at: (0, 0))
-        try! game.makeMark(at: (1, 0))
-        try! game.makeMark(at: (0, 1))
-        try! game.makeMark(at: (1, 1))
-        try! game.makeMark(at: (0, 2))
-        
+        game.makeMark(at: (0, 0), completion: { (result) in
+            try! result.get()
+        })
+        game.makeMark(at: (1, 0), completion: { (result) in
+            try! result.get()
+        })
+        game.makeMark(at: (0, 1), completion: { (result) in
+            try! result.get()
+        })
+        game.makeMark(at: (1, 1), completion: { (result) in
+            try! result.get()
+        })
+        game.makeMark(at: (0, 2), completion: { (result) in
+            try! result.get()
+        })
+
+
         XCTAssertEqual(game.winningPlayer, .x)
         XCTAssert(game.gameIsOver)
         XCTAssertEqual(game.gameState, .won(.x))
     }
-    
+
     func testOWin() {
         var game = Game(board: GameBoard(), gameIsOver: false)
-        
-        
-        try! game.makeMark(at: (1, 0))
-        try! game.makeMark(at: (0, 0))
-        try! game.makeMark(at: (1, 1))
-        try! game.makeMark(at: (0, 1))
-        try! game.makeMark(at: (2, 1))
-        try! game.makeMark(at: (0, 2))
-        
+
+        game.makeMark(at: (1, 0), completion: { (result) in
+            try! result.get()
+        })
+        game.makeMark(at: (0, 0), completion: { (result) in
+            try! result.get()
+        })
+        game.makeMark(at: (1, 1), completion: { (result) in
+            try! result.get()
+        })
+        game.makeMark(at: (0, 1), completion: { (result) in
+            try! result.get()
+        })
+        game.makeMark(at: (2, 1), completion: { (result) in
+            try! result.get()
+        })
+        game.makeMark(at: (0, 2), completion: { (result) in
+            try! result.get()
+        })
+
+
+
         /*
         o x -
         o x x
         o  -
          */
-        
+
         XCTAssertEqual(game.winningPlayer, .o)
         XCTAssert(game.gameIsOver)
         XCTAssertEqual(game.gameState, .won(.o))
     }
-    
+
     func testIncomplete() {
         var game = Game(board: GameBoard(), gameIsOver: false)
         
-        try! game.makeMark(at: (0, 0))
-        try! game.makeMark(at: (1, 0))
-        try! game.makeMark(at: (0, 1))
-        try! game.makeMark(at: (1, 1))
-        
+        game.makeMark(at: (0, 0), completion: { (result) in
+            try! result.get()
+        })
+        game.makeMark(at: (1, 0), completion: { (result) in
+            try! result.get()
+        })
+        game.makeMark(at: (0, 1), completion: { (result) in
+            try! result.get()
+        })
+        game.makeMark(at: (1, 1), completion: { (result) in
+            try! result.get()
+        })
+
+
         XCTAssertFalse(game.gameIsOver)
         XCTAssertNotEqual(game.winningPlayer, .x)
         XCTAssertNotEqual(game.winningPlayer, .o)

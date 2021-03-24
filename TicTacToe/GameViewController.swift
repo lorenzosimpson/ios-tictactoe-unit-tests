@@ -40,11 +40,40 @@ class GameViewController: UIViewController, BoardViewControllerDelegate {
      }
     
     func boardViewController(_ boardViewController: BoardViewController, markWasMadeAt coordinate: Coordinate) {
-        do {
-            try game.makeMark(at: coordinate)
-        } catch {
-            NSLog("Error making move")
-        }
+        game.makeMark(at: coordinate, completion: { (result) in
+            do { try result.get() }
+            catch {
+                if let error = error as? Game.PlayError {
+                    switch error {
+                    case .illegalMove:
+                        DispatchQueue.main.async {
+                        let alert = UIAlertController(title: "Illegal Move",
+                                                      message: "Square already in use",
+                                                      preferredStyle: .alert)
+                        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                        self.present(alert, animated: true, completion: nil)
+                        
+                       }
+                    case .gameOver:
+                        print("game over!!!")
+                        DispatchQueue.main.async {
+                        let alert = UIAlertController(title: "Game Over",
+                                                      message: "Please start a new game",
+                                                      preferredStyle: .alert)
+                            alert.addAction(UIAlertAction(title: "Restart", style: .default, handler: {alert in
+                                self.game.restart()
+                            }))
+                            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+                        self.present(alert, animated: true, completion: nil)
+                       }
+                    }
+                }
+            }
+        })
+    }
+    
+    @objc func restartHandler() {
+        game.restart()
     }
     
     // MARK: - Private
@@ -52,7 +81,6 @@ class GameViewController: UIViewController, BoardViewControllerDelegate {
     private func updateViews() {
         guard isViewLoaded else { return }
   
-        
         switch game.gameState {
         case let .active(player):
             statusLabel.text = "Player \(player.stringValue)'s turn"

@@ -15,15 +15,23 @@ struct Game {
         case cat
         case won(GameBoard.Mark) // Winning player
     }
+    
+    enum PlayError: Error {
+        case illegalMove
+        case gameOver
+    }
+    
     mutating internal func restart() {
         // make new board
         // set game state to active, starting with x
         self.board = GameBoard()
         self.gameState = .active(.x)
     }
-    mutating internal func makeMark(at coordinate: Coordinate) throws {
+    
+    mutating internal func makeMark(at coordinate: Coordinate, completion: @escaping (Result<Bool, PlayError>) -> Void) {
         guard case let GameState.active(player) = gameState else {
             NSLog("Game is over")
+            completion(.failure(.gameOver))
             return
         }
         
@@ -40,8 +48,10 @@ struct Game {
                 let newPlayer = player == .x ? GameBoard.Mark.o : GameBoard.Mark.x
                 gameState = .active(newPlayer)
             }
+            completion(.success(true))
         } catch {
             NSLog("Illegal move")
+            completion(.failure(.illegalMove))
         }
     }
     
